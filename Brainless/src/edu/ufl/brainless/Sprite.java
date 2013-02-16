@@ -3,7 +3,12 @@ package edu.ufl.brainless;
 import android.graphics.Bitmap;
 
 public class Sprite {
+	
+	private static final String TAG = Sprite.class.getSimpleName();
+	
 	protected Bitmap texture;
+	
+	// X and Y positions that correspond with top-left point of Sprite
 	protected float x;
 	protected float y;
 	

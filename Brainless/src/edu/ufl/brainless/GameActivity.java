@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ * The GameActivity class is the main activity for Brainless. It gets and loads
+ */
 public class GameActivity extends Activity {
 
 	private static final String TAG = GameActivity.class.getSimpleName();

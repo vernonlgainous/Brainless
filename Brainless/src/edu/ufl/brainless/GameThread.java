@@ -27,8 +27,8 @@ public class GameThread extends Thread {
 			Log.d(TAG, "Starting game loop");
 			while (running) {
 				tickCount++;
-				// update game state
-				// render state to screen
+				// update level
+				// draw level
 			}
 			Log.d(TAG, "Game loop executed " + tickCount + " times");
 		}

@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 
 public class Entity extends Sprite {
 	
+	private static final String TAG = Entity.class.getSimpleName();
+	
 	// Y positions of top and bottom of bounding box. X positions of left and right of bounding box.
 	protected float top, bottom, left, right;
 	

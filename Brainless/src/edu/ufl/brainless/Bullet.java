@@ -3,6 +3,8 @@ package edu.ufl.brainless;
 import android.graphics.Bitmap;
 
 public class Bullet extends Actor {
+	
+	private static final String TAG = Bullet.class.getSimpleName();
 
 	public Bullet(Bitmap texture, float x, float y) {
 		super(texture, x, y);
