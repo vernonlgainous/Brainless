@@ -1,9 +1,10 @@
 package edu.ufl.brainless;
 
-import android.util.Log;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -56,7 +57,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 			if (event.getY() > getHeight() - 50) {
 				thread.setRunning(false);
 				((Activity)getContext()).finish();
-			} else {
+			} 
+			else if (event.getY() < 50) {
+				Intent in = new Intent((Activity)getContext(), PauseActivity.class);
+				Log.d(TAG, "Starting PauseActivity.");
+				((Activity)getContext()).startActivity(in);				
+			}
+			else {
 				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
 			}
 		}

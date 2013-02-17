@@ -31,6 +31,12 @@ public class GameActivity extends Activity {
     	Log.d(TAG, "Destroying...");
     	super.onDestroy();
     }
+    
+    @Override
+    protected void onPause() {
+    	Log.d(TAG, "Pausing...");
+    	super.onPause();
+    }
 
     @Override
     protected void onStop() {
