@@ -27,7 +27,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		setFocusable(true);
 		
 		// Create InputManager
-		//inManager = new InputManager(this);
+		inManager = new InputManager(this);
+		Log.d(TAG, "Screen size: " + getWidth() + "x" + getHeight() + ".");
 	}
 	
 	@Override
@@ -62,7 +63,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 				((Activity)getContext()).finish();
 			} else {
 				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-				//inManager.passEvent(event);
+				inManager.passEvent(event);
 			}
 		}
 		

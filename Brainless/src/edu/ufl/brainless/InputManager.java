@@ -63,7 +63,23 @@ public class InputManager {
 	private int buttonPress;	// Button property. 0 = not pressed, 1 = pressed.
 		
 	public InputManager(GamePanel panel) {
-		//constructor
+		screenSize = new int[2];
+		screenSize[0] = panel.getWidth();
+		screenSize[1] = panel.getHeight();
+		Log.d(TAG, "Screen size: " + screenSize[0] + "x" + screenSize[1] + ".");
+		
+		stickNeutral = new int[2];
+		stickNeutral[0] = screenSize[0]/6;
+		stickNeutral[1] = screenSize[1]/4;
+		tiltRadius = 30;
+		moveRadius = 70;
+		Log.d(TAG, "Stick position (" + stickNeutral[0] + "," + stickNeutral[1] + ").");
+		
+		actionButton = new int[2];
+		actionButton[0] = screenSize[0]/6;
+		actionButton[1] = screenSize[1]*3/4;
+		Log.d(TAG, "Button position (" + actionButton[0] + "," + actionButton[1] + ").");
+		abRadius = 50;		
 	}
 	
 	public int[] checkInput() {
@@ -81,7 +97,7 @@ public class InputManager {
 		
 		// If distance between event and stick is less than the radius of the stick range, input is stick input.
 		// Change stick position and angle. Then check button pointer to see if it is no longer pressed.
-		tempMath = Math.sqrt((double) (eventX - stickNeutral[0])*(eventX - stickNeutral[0])+(eventY - stickNeutral[1])*(eventX - stickNeutral[1]));
+		tempMath = Math.sqrt((double) (eventX - stickNeutral[0])*(eventX - stickNeutral[0])+(eventY - stickNeutral[1])*(eventY - stickNeutral[1]));
 		Log.d(TAG, "Event distance from stick: " + (int) tempMath);
 		
 		if(tempMath <= moveRadius) {
@@ -97,20 +113,24 @@ public class InputManager {
 			// Check button pointer. If button is no longer pressed by last motion pointer, buttonPress = 0. Else buttonPress >= 1.
 			if(bPointer != 0) {	buttonPress = (int) event.getPressure(bPointer); 
 				if(buttonPress == 0) { Log.d(TAG, "Button released."); }
-				else { Log.d(TAG, "Button p."); }
+				else { Log.d(TAG, "Button pressed."); }
 			}
 		}
 			
 		// If distance between event and button is less than the radius of the button, input is button input.
 		// Change button status. Then check stick pointer to see if it's no longer pressed. If it is, adjust values.
 		else {
-			tempMath = Math.sqrt((double) (eventX - actionButton[0])*(eventX - actionButton[0])+(eventY - actionButton[1])*(eventX - actionButton[1]));
+			tempMath = Math.sqrt((double) (eventX - actionButton[0])*(eventX - actionButton[0])+(eventY - actionButton[1])*(eventY - actionButton[1]));
+			Log.d(TAG, "Event distance from button: " + (int) tempMath);
+			
 			if(tempMath <= abRadius) {			
 				// Change button pointer.
 				bPointer = event.getPointerId(0);
 				
 				// Change button status to pressed.
 				buttonPress = (int) event.getPressure(bPointer);
+				if(buttonPress == 0) { Log.d(TAG, "Button released."); }
+				else { Log.d(TAG, "Button pressed."); }
 				
 				// Check stick pointer. If pressure >= 1, change properties.
 				if(sPointer != 0) {
@@ -122,8 +142,8 @@ public class InputManager {
 						tempMath = Math.sqrt((double) (sPX - stickNeutral[0])*(sPX - stickNeutral[0])+(sPY - stickNeutral[1])*(sPY - stickNeutral[1]));
 					
 						// Check to see if sPointer is tilt or move.
-						if(tempMath <= tiltRadius) { stickPosition = 1;	} // Tilt
-						else { stickPosition = 2; } // Move
+						if(tempMath <= tiltRadius) { stickPosition = 1;	Log.d(TAG, "Stick tilted."); } // Tilt
+						else { stickPosition = 2; Log.d(TAG, "Stick moved."); } // Move
 						
 						// Calculate stick angle.
 						
