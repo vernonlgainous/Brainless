@@ -39,7 +39,7 @@ public class Player extends Actor {
 		this.isDead = isDead;
 	}
 	
-	//death method
+	//death/ damage method
 	public boolean isDead(){
 		if(this.isDead == true){
 			return true;
@@ -49,11 +49,20 @@ public class Player extends Actor {
 		}
 	}
 	
-	public void Death(){
-		if (this.isDead()){
-			// TODO execute death
+	public void Damage(int DamageAmount){
+		if(health - DamageAmount > 0){
+			this.health = this.health - DamageAmount;
 		}
-		
+		else{
+			this.health = 0;
+			this.setIsDead(true);
+			this.Death();
+		}
 	}
 	
+	public void Death(){
+		if (this.isDead()){
+			// TODO execute player death
+		}		
+	}	
 }
