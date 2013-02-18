@@ -13,6 +13,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = GameThread.class.getSimpleName();
 	
 	private GameThread thread;
+	private InputManager inManager;
 	
 	public GamePanel(Context context) {
 		super(context);
@@ -24,6 +25,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
+		
+		// Create InputManager
+		//inManager = new InputManager(this);
 	}
 	
 	@Override
@@ -58,6 +62,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 				((Activity)getContext()).finish();
 			} else {
 				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+				//inManager.passEvent(event);
 			}
 		}
 		
