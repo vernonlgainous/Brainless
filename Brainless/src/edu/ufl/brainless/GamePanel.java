@@ -26,9 +26,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
 		
-		// Create InputManager
-		inManager = new InputManager(this);
-		Log.d(TAG, "Screen size: " + getWidth() + "x" + getHeight() + ".");
+		
 	}
 	
 	@Override
@@ -55,6 +53,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 	
+	public InputManager createInputManager() {
+		// Create InputManager
+		 inManager = new InputManager(this);
+		 Log.d(TAG, "Screen size: " + getWidth() + "x" + getHeight() + ".");
+		 return inManager;
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -72,6 +77,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		Log.d(TAG, "Drawing...");
 		
+		super.onDraw(canvas);
 	}
 }

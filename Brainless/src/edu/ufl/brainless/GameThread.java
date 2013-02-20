@@ -25,10 +25,12 @@ public class GameThread extends Thread {
 		while (running) {
 			long tickCount = 0L;
 			Log.d(TAG, "Starting game loop");
+			InputManager inManager = gamePanel.createInputManager();
 			while (running) {
 				tickCount++;
 				// update level
 				// draw level
+				inManager.update();
 			}
 			Log.d(TAG, "Game loop executed " + tickCount + " times");
 		}
