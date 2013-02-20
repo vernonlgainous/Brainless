@@ -92,6 +92,12 @@ public class Weapon extends Item {
 	}	
 
 	public void reload(){
+		try {
+		    Thread.sleep(reloadTime*1000); //Is this is the right way to pause for reload? Hope this doesn't pause the entire game.
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
 		this.numberOfClips --;
 		this.ammoInClip = constAmmoInClip;
 	}
