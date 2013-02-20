@@ -11,9 +11,10 @@ public class InputManager {
 	
 	/*  Notes:
 	 *  InputManager is created by GamePanel class. GamePanel passes itself into InputManager, which uses GamePanel to calculate the locations of stickNeutral and actionButton.
-	 *  When GamePanel receives an MotionEvent, it calls InputManager.passEvent(Event), which stores the event as an attribute. When Player calls InputManager.checkInput(),
-	 *  InputManager processes event using update() and returns an input array int size 3. input[0] = neutral/tilt/move (0,1,2), input[1] = angle, input[2] = button
-	 *  (0 = not pressed, 1 = pressed). If needed, checkInput can be overloaded for multiple classes e.g. checkInput(Weapon) returns something else.
+	 *  When GamePanel receives an MotionEvent, it calls InputManager.passEvent(Event), which stores the event as an attribute. GameThread runs update() every thread cycle,
+	 *  which processes the event into its input properties.
+	 *  When Player runs InputManager.checkInput(), InputManager returns an int array[3] called input. input[0] = neutral/tilt/move (0,1,2), input[1] = angle,
+	 *  input[2] = button (0 = not pressed, 1 = pressed). If needed, checkInput can be overloaded for multiple classes e.g. checkInput(Weapon) returns something else.
 	 *  
 	 *  Parameters defined in constructor: (Arbitrary values for now)
 	 *  stickNeutral: x = getWidth()/6. y = getHeight()*1/4.
@@ -32,7 +33,8 @@ public class InputManager {
 	 *  getPressure can return higher than 1 "depending on calibration of input device". Need to test.
 	 *  
 	 *  To do:
-	 *  passEvent(Event): define how to calculate stick angle in both halves of method.
+	 *  I'm not sure right now.
+	 *  Make real parameters for stick and button position?
 	 */
 	
 	private static final String TAG = GameThread.class.getSimpleName();
@@ -116,13 +118,18 @@ public class InputManager {
 		// If distance between event and stick is less than the radius of the stick range, input is stick input.
 		tempMath = Math.sqrt((double) (eventX - stickNeutral[0])*(eventX - stickNeutral[0])+(eventY - stickNeutral[1])*(eventY - stickNeutral[1]));
 		if(tempMath <= moveRadius) {
-			Log.d(TAG, "Stick input.");
 			// Check to see if event is tilt or move.
-			if(tempMath <= tiltRadius) { stickPosition = 1; } // Tilt
+			if(tempMath <= tiltRadius) { stickPosition = 1;} // Tilt
 			else { stickPosition = 2; } // Move
 			
 			// Adjust stick angle.
+			int deltaX = (int) eventX - stickNeutral[0];
+			int deltaY = (int) eventY - stickNeutral[1];			
+			stickAngle = (int) (Math.atan2(deltaY, deltaX) * 180 / Math.PI);
+			if (stickAngle < 0) { stickAngle += 360; }
 			
+			if(stickPosition == 1) { Log.d(TAG, "Stick tilted, angle = " + stickAngle); }
+			else { Log.d(TAG, "Stick moved, angle = " + stickAngle); }
 		}
 			
 		// If distance between event and button is less than the radius of the button, input is button input.
