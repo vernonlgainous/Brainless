@@ -8,6 +8,8 @@ public class Enemy extends Actor {
 	
 	private static final String TAG = Enemy.class.getSimpleName();
 
+	//constructors
+	
 	public Enemy(Bitmap texture, float x, float y) {//default constructor		
 		super(texture, x, y);
 		health = 100; //every enemy starts out with full health
@@ -20,6 +22,8 @@ public class Enemy extends Actor {
 		this.health = health;
 		// TODO Auto-generated constructor stub
 	}
+	
+	// getters and setters
 	
 	public int getHealth(){
 		return health;
@@ -37,7 +41,7 @@ public class Enemy extends Actor {
 		this.isDead = isDead;
 	}
 	
-	//death/ damage method
+	//death and damage methods
 		public boolean isDead(){
 			if(this.isDead == true){
 				return true;
