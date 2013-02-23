@@ -3,66 +3,79 @@ package edu.ufl.brainless;
 import android.graphics.Bitmap;
 
 public class Player extends Actor {
-	public int health; //health of player ranges from 0 to 100
+	public int health; // health of player ranges from 0 to 100
 	public boolean isDead;
-	
+	public Weapon heldWeapon;
+
 	private static final String TAG = Player.class.getSimpleName();
-	
-	public Player(Bitmap texture, float x, float y) { //default constructor
+
+	public Player(Bitmap texture, float x, float y) { // default constructor
 		super(texture, x, y);
-		health = 100; //every player starts out with full health
+		heldWeapon = new Weapon();
+		health = 100; // every player starts out with full health
 		isDead = false;
 		// TODO Auto-generated constructor stub
 	}
-	public Player(Bitmap texture, float x, float y, int health, boolean isDead) {		
+
+	public Player(Bitmap texture, float x, float y, int health, boolean isDead) {
 		super(texture, x, y);
+		heldWeapon = new Weapon();
 		this.isDead = isDead;
 		this.health = health;
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	public Player(Bitmap texture, float x, float y, int health, boolean isDead,
+			String weaponName, int constAmmoInClip, int numberOfClips,
+			int reloadTime, int weaponDamage) {
+		super(texture, x, y);
+		heldWeapon = new Weapon(weaponName, constAmmoInClip, numberOfClips,
+				reloadTime, weaponDamage);
+		this.isDead = isDead;
+		this.health = health;
+		// TODO Auto-generated constructor stub
+	}
+
 	// Get Set methods
-	
-	public int getHealth(){
+
+	public int getHealth() {
 		return health;
 	}
-	
-	public void setHealth(int health){
+
+	public void setHealth(int health) {
 		this.health = health;
 	}
-	
-	public boolean getIsDead(){
+
+	public boolean getIsDead() {
 		return isDead;
 	}
-	
-	public void setIsDead(boolean isDead){
+
+	public void setIsDead(boolean isDead) {
 		this.isDead = isDead;
 	}
-	
-	//death/ damage method
-	public boolean isDead(){
-		if(this.isDead == true){
+
+	// death/ damage method
+	public boolean isDead() {
+		if (this.isDead == true) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
-	
-	public void Damage(int DamageAmount){
-		if(health - DamageAmount > 0){
+
+	public void Damage(int DamageAmount) {
+		if (health - DamageAmount > 0) {
 			this.health = this.health - DamageAmount;
-		}
-		else{
+		} else {
 			this.health = 0;
 			this.setIsDead(true);
 			this.Death();
 		}
 	}
-	
-	public void Death(){
-		if (this.isDead()){
+
+	public void Death() {
+		if (this.isDead()) {
 			// TODO execute player death
-		}		
-	}	
+		}
+	}
 }

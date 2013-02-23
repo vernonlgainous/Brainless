@@ -18,9 +18,10 @@ public class Weapon extends Item {
 		ammoRemaining = numberOfClips*ammoInClip; 		
 		reloadTime = 2;
 		weaponDamage = 50;		
-	}
+	}	
 	
-	public Weapon(String weaponName, int constAmmoInClip, int numberOfClips, int reloadTime, int weaponDamage){
+	public Weapon(String weaponName, int constAmmoInClip, int numberOfClips,
+			int reloadTime, int weaponDamage){
 		super(weaponName);
 		this.constAmmoInClip = constAmmoInClip;
 		this.numberOfClips = numberOfClips;

@@ -17,7 +17,7 @@ public class Enemy extends Actor {
 		// TODO Auto-generated constructor stub
 	}
 	public Enemy(Bitmap texture, float x, float y, int health, boolean isDead) {		
-		super(texture, x, y);
+		super(texture, x, y);		
 		this.isDead = isDead;
 		this.health = health;
 		// TODO Auto-generated constructor stub
