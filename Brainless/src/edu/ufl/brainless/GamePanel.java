@@ -3,7 +3,12 @@ package edu.ufl.brainless;
 import android.util.Log;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,20 +57,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (event.getY() > getHeight() - 50) {
-				thread.setRunning(false);
-				((Activity)getContext()).finish();
-			} else {
-				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-			}
+		if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+			thread.addEventToHud(event);
+			Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+			//thread.setRunning(false);
+			//((Activity)getContext()).finish();
 		}
+		else if (event.getAction() == MotionEvent.ACTION_UP)
+			thread.removeEventFromHud();
 		
 		return super.onTouchEvent(event);
 	}
 	
 	@Override
-	protected void onDraw(Canvas canvas) {
-		
+	public void onDraw(Canvas canvas) {
+		canvas.drawColor(Color.WHITE);
 	}
 }
