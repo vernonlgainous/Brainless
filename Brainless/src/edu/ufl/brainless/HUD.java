@@ -21,11 +21,22 @@ public class HUD {
 	
 	private Sprite stick;
 	private Sprite stickBackground;
+	private Sprite button;
+	
+	private float stickCenterX = 100;
+	private float stickCenterY = 375;
+	private float buttonCenterX = 600;
+	private float buttonCenterY = 375;
 
 	// Stick locations
 	private float tiltRadius;		// Range where player is tilting stick.
 	private float moveRadius;		// Range where player is moving stick.
-	private float stickAngle;		// Angle of stick input.
+	private Vector2 stickAngle = new Vector2(0,0);		// Angle of stick input.
+	
+	private float buttonRadius;
+	
+	private int stickPointerId = -1;
+	private boolean[] buttonPointers = new boolean[10];
 
 	public HUD() {
 		stick = new Sprite(ResourceManager.getBitmap(R.drawable.stick_foreground), 45, 355, 0);
@@ -36,47 +47,99 @@ public class HUD {
 		moveRadius = stickBackground.rect.width/2;
 		Log.d(TAG, "Stick position: " + stick.position.toString());
 
-		/*actionButton = new int[2];
-		actionButton[0] = screenSize[0]/6;
-		actionButton[1] = screenSize[1]*3/4;
-		Log.d(TAG, "Button position: (" + actionButton[0] + "," + actionButton[1] + ").");
-		abRadius = 50;*/
+		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
+		button.setCenter(new Vector2(buttonCenterX, buttonCenterY));
+		buttonRadius = button.rect.width;
 	}
 	
 	public void passEvent(MotionEvent event) {
 		this.event = event;
+		int action = event.getAction() & MotionEvent.ACTION_MASK;
+		int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+		int pointerId = event.getPointerId(pointerIndex);
+		
+		try {
+			switch (action) {
+				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_POINTER_DOWN:
+					isPointerStickInput(event, pointerId);
+					buttonPointers[pointerId] = isPointerButtonInput(event, pointerId);
+					break;
+				case MotionEvent.ACTION_UP:
+				case MotionEvent.ACTION_POINTER_UP:
+					if(stickPointerId == pointerId)
+						stickPointerId = -1;
+					buttonPointers[pointerId] = false;
+					break;
+				case MotionEvent.ACTION_CANCEL:
+					buttonPointers[pointerId] = false;
+					stickPointerId = -1;
+					break;
+				case MotionEvent.ACTION_MOVE:
+					isPointerStickInput(event, pointerIndex);
+					buttonPointers[pointerId] = isPointerButtonInput(event, pointerIndex);
+					break;
+			}
+		}
+		catch(IllegalArgumentException e) {
+			Log.d(TAG, e.toString());
+		}
+	}
+	
+	private boolean isPointerStickInput(MotionEvent event, int pointerIndex) {
+		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
+		boolean result = false;
+		if (Vector2.Distance(stick.getCenter(), eventVector) <= moveRadius) {
+			result = true;
+			stickPointerId = event.getPointerId(pointerIndex);
+		}
+		return result;
+	}
+	
+	private boolean isPointerButtonInput(MotionEvent event, int pointerIndex) {
+		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
+		boolean result = false;
+		if (Vector2.Distance(button.getCenter(), eventVector) <= buttonRadius) {
+			result = true;
+		}
+		return result;
+	}
+	
+	public boolean isStickPressed() {
+		return stickPointerId > -1;
+	}
+	
+	public boolean isButtonPressed() {
+		boolean result = false;
+		for (int i = 0; i < buttonPointers.length; i++) {
+			if (buttonPointers[i])
+				result = true;
+		}
+		return result;
 	}
 
 	// calls updateCheckPointer for each pointer in event
 	public void update() {
-		//Log.d(TAG, "Updating input attributes.");
-		if(event != null) { if(event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-			Log.d(TAG, "Pointer count: " + event.getPointerCount());
-			for(int c = 0; c < event.getPointerCount(); c++) { updateCheckPointer(c); }
-		}}
+		int stickPointerIndex = 0;
+		if(event != null && isStickPressed()) {
+			if (event.getPointerCount() > 1)
+				stickPointerIndex = event.findPointerIndex(stickPointerIndex);
+			Vector2 stickVector = new Vector2(event.getX(stickPointerIndex), event.getY(stickPointerIndex));
+			if (Vector2.Distance(stickBackground.getCenter(), stickVector) > moveRadius) {
+				stickVector = Vector2.Subtract(stickVector, stickBackground.getCenter());
+				stickVector.Normalize(moveRadius);
+				stickVector = Vector2.Add(stickVector, stickBackground.getCenter());
+			}
+			stick.setCenter(stickVector);
+		}
 		else
 			resetHUD();
-	}
-
-	// updates input properties based on the pointer passed to it
-	private void updateCheckPointer(int pointerIndex) {
-
-		Vector2 eventPos = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
-
-		// If distance between event and stick is less than the radius of the stick range, input is stick input.
-		if(Vector2.Distance(eventPos, stickBackground.getCenter()) <= moveRadius) {
-			stick.setCenter(eventPos); 
-			// Check to see if event is tilt or move.
-			if(Vector2.Distance(eventPos, stickBackground.getCenter()) <= tiltRadius) { 
-				// Not enough distance for movement
-			}
-			else { 
-				// Adjust stick angle.
-				Vector2 delta = new Vector2(eventPos.X - stickBackground.getCenter().X, eventPos.Y - stickBackground.getCenter().Y);	
-				stickAngle = (float)(Math.atan2(delta.Y, delta.X) * 180 / Math.PI);
-				if (stickAngle < 0)
-					stickAngle += 360;
-			}
+		
+		if (isButtonPressed()) {
+			// load pressed button image
+		}
+		else {
+			// load default button image
 		}
 	}
 	
@@ -86,17 +149,16 @@ public class HUD {
 	
 	public Vector2 getPlayerDirection() {
 		if (stick.getCenter().X != stickBackground.getCenter().X || stick.getCenter().Y != stickBackground.getCenter().Y) {
-			Vector2 direction = new Vector2(stick.getCenter().X - stickBackground.getCenter().X, stick.getCenter().Y - stickBackground.getCenter().Y);
-			direction.Normalize();
-			return direction;
+			stickAngle = new Vector2(stick.getCenter().X - stickBackground.getCenter().X, stick.getCenter().Y - stickBackground.getCenter().Y);
+			stickAngle.Normalize();
 		}
-		else
-			return new Vector2(0,0);
+		return stickAngle;
 	}
 
 	// test
 	public void draw(Canvas canvas) {
 		stickBackground.draw(canvas);
 		stick.draw(canvas);
+		button.draw(canvas);
 	}
 }

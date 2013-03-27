@@ -27,17 +27,29 @@ public class GameActivity extends Activity {
         // set GamePanel as the View
         setContentView(new GamePanel(this));
         Log.d(TAG, "View added");
+        
+        // Create and load the SoundManager
+        SoundManager.getInstance();
+        SoundManager.initSounds(this.getApplicationContext());
+        SoundManager.loadSounds();
+        SoundManager.loadMedia();
+        
+        
     }
     
     @Override
     protected void onDestroy() {
     	Log.d(TAG, "Destroying...");
+    	SoundManager.pauseMedia();
+    	SoundManager.cleanup();
     	super.onDestroy();
     }
 
     @Override
     protected void onStop() {
         Log.d(TAG, "Stopping...");
+        SoundManager.pauseMedia();
+    	SoundManager.cleanup();
         super.onStop();
     }
 }

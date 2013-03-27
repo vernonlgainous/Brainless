@@ -46,6 +46,12 @@ public class Sprite {
 		rect.height = texture.getHeight();
 	}
 	
+	public void LoadBitmap(Bitmap texture) {
+		this.texture = texture;
+		rect.width = texture.getWidth();
+		rect.height = texture.getHeight();
+	}
+	
 	public void update() {
 		angle += 1f;
 		if (angle > 360)

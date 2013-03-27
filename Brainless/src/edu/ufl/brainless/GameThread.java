@@ -31,20 +31,25 @@ public class GameThread extends Thread {
 	public void run() {
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
+		SoundManager.playMedia(1);
 		while (running) {			
 			Canvas c = null;
 			try {
 				c = surfaceHolder.lockCanvas();
 				tickCount++;
 				hud.update();
-				level.update(hud.getPlayerDirection());
+				level.update(hud);
 				draw(c);
+			}
+			catch(IllegalArgumentException e) {
+				//Log.d(TAG, e.toString());
 			}
 			finally {
 				surfaceHolder.unlockCanvasAndPost(c);
 			}
 		}
 		Log.d(TAG, "Game loop executed " + tickCount + " times");
+		SoundManager.pauseMedia();
 	}
 	
 	public void addEventToHud(MotionEvent event) {

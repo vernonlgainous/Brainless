@@ -2,6 +2,7 @@ package edu.ufl.brainless;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -87,10 +88,16 @@ public class Player extends Actor {
 		}		
 	}
 	
-	public void update(Vector2 direction) {
-		this.direction = direction;
+	public void update(HUD hud) {
+		direction = hud.getPlayerDirection();
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
-		super.update();
+		if (hud.isStickPressed())
+			super.update();
+		
+		if (hud.isButtonPressed()) {
+			// fire weapon
+			SoundManager.playSound(1, 1.0f, false);
+		}
 		
 		// Check if player is outside of screen
 		if (position.X < 0)
