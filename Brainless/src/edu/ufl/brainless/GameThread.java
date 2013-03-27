@@ -50,6 +50,7 @@ public class GameThread extends Thread {
 		}
 		Log.d(TAG, "Game loop executed " + tickCount + " times");
 		SoundManager.pauseMedia();
+    	SoundManager.resetMedia();
 	}
 	
 	public void addEventToHud(MotionEvent event) {

@@ -32,15 +32,14 @@ public class GameActivity extends Activity {
         SoundManager.getInstance();
         SoundManager.initSounds(this.getApplicationContext());
         SoundManager.loadSounds();
-        SoundManager.loadMedia();
-        
-        
+        SoundManager.loadMedia();        
     }
     
     @Override
     protected void onDestroy() {
     	Log.d(TAG, "Destroying...");
     	SoundManager.pauseMedia();
+    	SoundManager.resetMedia();
     	SoundManager.cleanup();
     	super.onDestroy();
     }
@@ -49,6 +48,7 @@ public class GameActivity extends Activity {
     protected void onStop() {
         Log.d(TAG, "Stopping...");
         SoundManager.pauseMedia();
+    	SoundManager.resetMedia();
     	SoundManager.cleanup();
         super.onStop();
     }
