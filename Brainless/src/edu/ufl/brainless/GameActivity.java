@@ -15,7 +15,7 @@ import android.view.WindowManager;
 public class GameActivity extends Activity {
 
 	private static final String TAG = GameActivity.class.getSimpleName();
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

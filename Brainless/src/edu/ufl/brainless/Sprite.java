@@ -62,11 +62,19 @@ public class Sprite {
 	public void setCenter(Vector2 pos) {
 		position.X = pos.X - rect.width/2;
 		position.Y = pos.Y - rect.height/2;
+		rect.X = position.X;
+		rect.Y = position.Y;
 	}
 	
 	// gets center position of sprite
 	public Vector2 getCenter() {
 		return new Vector2(position.X + rect.width/2, position.Y + rect.height/2);
+	}
+	
+	// to remove a sprite from the canvas
+	public void clear(){
+		//The sprite to be erased from the canvas.
+		this.texture.recycle();
 	}
 	
 	public void draw(Canvas canvas) {

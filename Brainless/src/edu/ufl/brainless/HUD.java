@@ -13,28 +13,29 @@ import android.view.MotionEvent;
  * Used to display in-game stick and button controls
 */
 public class HUD {
-	
+
 	private static final String TAG = HUD.class.getSimpleName();
-	
+
 	private MotionEvent event;	// Contains input
 	private GamePanel panel;	// Used to call getHeight, getWidth, etc.
-	
+
 	private Sprite stick;
 	private Sprite stickBackground;
 	private Sprite button;
-	
+	protected Sprite healthBar;
+
 	private float stickCenterX = 100;
 	private float stickCenterY = 375;
-	private float buttonCenterX = 600;
+	private float buttonCenterX = 700;
 	private float buttonCenterY = 375;
 
 	// Stick locations
 	private float tiltRadius;		// Range where player is tilting stick.
 	private float moveRadius;		// Range where player is moving stick.
 	private Vector2 stickAngle = new Vector2(0,0);		// Angle of stick input.
-	
+
 	private float buttonRadius;
-	
+
 	private int stickPointerId = -1;
 	private boolean[] buttonPointers = new boolean[10];
 
@@ -47,17 +48,19 @@ public class HUD {
 		moveRadius = stickBackground.rect.width/2;
 		Log.d(TAG, "Stick position: " + stick.position.toString());
 
+		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
+
 		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
 		button.setCenter(new Vector2(buttonCenterX, buttonCenterY));
 		buttonRadius = button.rect.width;
 	}
-	
+
 	public void passEvent(MotionEvent event) {
 		this.event = event;
 		int action = event.getAction() & MotionEvent.ACTION_MASK;
 		int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 		int pointerId = event.getPointerId(pointerIndex);
-		
+
 		try {
 			switch (action) {
 				case MotionEvent.ACTION_DOWN:
@@ -85,7 +88,7 @@ public class HUD {
 			Log.d(TAG, e.toString());
 		}
 	}
-	
+
 	private boolean isPointerStickInput(MotionEvent event, int pointerIndex) {
 		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
 		boolean result = false;
@@ -95,7 +98,7 @@ public class HUD {
 		}
 		return result;
 	}
-	
+
 	private boolean isPointerButtonInput(MotionEvent event, int pointerIndex) {
 		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
 		boolean result = false;
@@ -104,11 +107,11 @@ public class HUD {
 		}
 		return result;
 	}
-	
+
 	public boolean isStickPressed() {
 		return stickPointerId > -1;
 	}
-	
+
 	public boolean isButtonPressed() {
 		boolean result = false;
 		for (int i = 0; i < buttonPointers.length; i++) {
@@ -134,7 +137,7 @@ public class HUD {
 		}
 		else
 			resetHUD();
-		
+
 		if (isButtonPressed()) {
 			// load pressed button image
 		}
@@ -142,11 +145,11 @@ public class HUD {
 			// load default button image
 		}
 	}
-	
+
 	public void resetHUD() {
 		stick.setCenter(stickBackground.getCenter());
 	}
-	
+
 	public Vector2 getPlayerDirection() {
 		if (stick.getCenter().X != stickBackground.getCenter().X || stick.getCenter().Y != stickBackground.getCenter().Y) {
 			stickAngle = new Vector2(stick.getCenter().X - stickBackground.getCenter().X, stick.getCenter().Y - stickBackground.getCenter().Y);
@@ -159,6 +162,17 @@ public class HUD {
 	public void draw(Canvas canvas) {
 		stickBackground.draw(canvas);
 		stick.draw(canvas);
+		healthBar.draw(canvas);
 		button.draw(canvas);
+	}
+	
+	public void drawText(Canvas canvas, Player player) {
+		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(Color.WHITE);
+		paint.setAntiAlias(true);
+		paint.setTextSize(24);
+		canvas.drawText("Clip: " + player.getWeapon().ammoInClip + "/" + player.getWeapon().constAmmoInClip, 600, 100, paint);
+		canvas.drawText("# Clips: " + player.getWeapon().numberOfClips, 600, 130, paint);
 	}
 }
