@@ -7,11 +7,11 @@ package edu.ufl.brainless;
  *
  */
 public class Grid {
-	
+
 	private static final String TAG = Grid.class.getSimpleName();
-	
+
 	Sprite[][] grid;
-	
+
 	public Grid(Sprite[][] grid) {
 		this.grid = grid;
 	}
