@@ -32,8 +32,8 @@ public class GameThread extends Thread {
 		int width = surfaceDimensions.width();
 		double aspectRatio = width/height;
 		int surfaceHeight = (int) ((int) 480 * aspectRatio);
-		*/
 		surfaceHolder.setFixedSize(853,480);
+		*/
 		
 		
 		level = new Level();
