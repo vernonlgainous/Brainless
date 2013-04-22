@@ -23,7 +23,7 @@ public class HUD {
 	private Sprite stickBackground;
 	private Sprite button;
 	private Sprite reloadButton;
-	protected Sprite healthBar;
+	//protected Sprite healthBar;
 
 	private float stickCenterX = 100;
 	private float stickCenterY = 375;
@@ -53,7 +53,7 @@ public class HUD {
 		moveRadius = stickBackground.rect.width/2;
 		//Log.d(TAG, "Stick position: " + stick.position.toString());
 
-		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
+		//healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
 
 		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
 		button.setCenter(new Vector2(buttonCenterX, buttonCenterY));
@@ -224,7 +224,7 @@ public class HUD {
 	public void draw(Canvas canvas) {
 		stickBackground.draw(canvas);
 		stick.draw(canvas);
-		healthBar.draw(canvas);
+		//healthBar.draw(canvas);
 		button.draw(canvas);
 		reloadButton.draw(canvas);
 	}

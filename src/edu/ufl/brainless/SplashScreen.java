@@ -33,6 +33,7 @@ public class SplashScreen extends Activity{
 					finish();
 					Intent intent = new Intent();
 					intent.setClass(sPlashScreen, GameActivity.class);
+					Log.d(TAG, "Starting game.");
 					startActivity(intent);
 					loop = false;
 				}
