@@ -23,7 +23,7 @@ public class HUD {
 	private Sprite stickBackground;
 	private Sprite button;
 	private Sprite reloadButton;
-	//protected Sprite healthBar;
+	protected Sprite healthBar;
 
 	private float stickCenterX = 100;
 	private float stickCenterY = 375;
@@ -36,6 +36,7 @@ public class HUD {
 	private Vector2 stickAngle = new Vector2(0,0);		// Angle of stick input.
 
 	private float buttonRadius;
+	private float reloadButtonRadius;
 
 	private int stickPointerId = -1;
 	private boolean[] buttonPointers = new boolean[10];
@@ -53,13 +54,14 @@ public class HUD {
 		moveRadius = stickBackground.rect.width/2;
 		//Log.d(TAG, "Stick position: " + stick.position.toString());
 
-		//healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
+		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
 
-		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
+		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_button), 10, 320, 0);
 		button.setCenter(new Vector2(buttonCenterX, buttonCenterY));
-		reloadButton = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
+		reloadButton = new Sprite(ResourceManager.getBitmap(R.drawable.reload_button_t), 10, 320, 0);
 		reloadButton.setCenter(new Vector2(buttonCenterX - 300, buttonCenterY));
 		buttonRadius = button.rect.width;
+		reloadButtonRadius = reloadButton.rect.width;
 	}
 
 	public void passEvent(MotionEvent event) {
@@ -126,7 +128,7 @@ public class HUD {
 	private boolean isReloadPointerButtonInput(MotionEvent event, int pointerIndex) {
 		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
 		boolean result = false;
-		if (Vector2.Distance(reloadButton.getCenter(), eventVector) <= buttonRadius) {
+		if (Vector2.Distance(reloadButton.getCenter(), eventVector) <= reloadButtonRadius) {
 			result = true;
 		}
 		return result;
@@ -150,7 +152,7 @@ public class HUD {
 		return result;
 	}
 
-	
+
 	public boolean isStickPressed() {
 		return stickPointerId > -1;
 	}
@@ -201,7 +203,7 @@ public class HUD {
 	public void resetHUD() {
 		stick.setCenter(stickBackground.getCenter());
 	}
-	
+
 	public int isPlayerMoving() {
 		int result = NEUTRAL;
 		if(isStickPressed()) {
@@ -224,7 +226,7 @@ public class HUD {
 	public void draw(Canvas canvas) {
 		stickBackground.draw(canvas);
 		stick.draw(canvas);
-		//healthBar.draw(canvas);
+		healthBar.draw(canvas);
 		button.draw(canvas);
 		reloadButton.draw(canvas);
 	}

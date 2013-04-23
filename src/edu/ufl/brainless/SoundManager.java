@@ -85,7 +85,16 @@ public class SoundManager {
 	 */
 	public static void loadMedia() {
 		addMedia("theme", "test_theme");
-	}	
+	}
+	
+	/**
+	 * Controls mediaplayer volume
+	 */
+	public static void setVolume(float volume)
+	{
+		mediaPlayer.setVolume(volume, volume);
+		Log.d("SoundManager", "Volume set to " + volume);
+	}
 
 	/**
 	 * playMedia(int index) sets a new data source for the mediaPlayer with Uri from mediaPlayerMap,

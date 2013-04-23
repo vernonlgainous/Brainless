@@ -2,6 +2,7 @@ package edu.ufl.brainless;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -30,10 +31,17 @@ public class GameActivity extends Activity {
         Log.d(TAG, "View added");
         
         // Create and load the SoundManager
+        Intent intent = getIntent();
         SoundManager.getInstance();
         SoundManager.initSounds(this.getApplicationContext());
         SoundManager.loadSounds();
-        SoundManager.loadMedia();        
+        SoundManager.loadMedia();
+        boolean mute = intent.getBooleanExtra("mute", false);
+        if(mute)
+        {
+        	SoundManager.setVolume(0);
+        	Log.d(TAG, "Muted1.");
+        }
     }
     
     @Override

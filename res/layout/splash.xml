@@ -1,18 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id = "@+id/TheSplashLayout"
-    android:layout_gravity="center"
-    android:orientation="vertical" >
-    <ImageView 
-        android:layout_width = "wrap_content"
-        android:layout_height="wrap_content" 
-        android:id="@+id/SplashImageView"
-        android:layout_gravity="center"        
-        android:src="@drawable/lnxins"        
-        >
-    </ImageView>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#272a31" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="374dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center"
+        android:src="@drawable/brainless_title" />
+
+    <ImageView
+        android:id="@+id/start_game"
+        android:layout_width="144dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/brainless_startgamebutton" />
+
+    <ImageView
+        android:id="@+id/high_scores"
+        android:layout_width="144dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/brainless_highscorebutton" />
+
+    <ImageView
+        android:id="@+id/exit_game"
+        android:layout_width="144dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:src="@drawable/brainless_exitbutton" />
+
+    <CheckBox
+        android:id="@+id/mute_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Mute" />
 
 </LinearLayout>

@@ -35,7 +35,6 @@ public class Level extends HUD {
 	private int healthTimer = 0;
 	private int healthInterval = 600;
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
-	HealthBar healthBar;
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
 	public Player getPlayer() {
@@ -50,9 +49,8 @@ public class Level extends HUD {
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
 		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
-		healthBar = new HealthBar(player);
 	}
-	
+
 	public void addHealth(){
 		//Random rand = new Random();
 		//public Actor(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) {
@@ -60,7 +58,7 @@ public class Level extends HUD {
 		Actor healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f, 0, newVector, 0);
 		items.add(healthPack);
 	}
-	
+
 	public void addZombie() {
 		Random rnd = new Random();
 		int selection = rnd.nextInt(4);
@@ -93,37 +91,29 @@ public class Level extends HUD {
 	}
 
 	public void update(HUD hud) {
-		try
-		{
-			player.update(hud);
-			if (++zombieTimer >= zombieInterval) {
-				zombieTimer = 0;
-				addZombie();
-			}
-			if(++healthTimer >= healthInterval){
-				healthTimer = 0;
-				addHealth();
-			}
-	
-			for(Enemy e : enemies) {
-				e.update(player.position);
-			}
-			collisionCheck();
-			for(Actor item : items) {
-				item.update(player.position);
-			}
-			for(Actor ammunition : ammunitions){
-				ammunition.update(player.position);
-			}
-			if (player.isDead()){
-				//restart();
-				gameOver();
-			}
-			//healthBar.update();
+		player.update(hud);
+		if (++zombieTimer >= zombieInterval) {
+			zombieTimer = 0;
+			addZombie();
 		}
-		catch(Exception e)
-		{
-			Log.d(TAG, e.toString());
+		if(++healthTimer >= healthInterval){
+			healthTimer = 0;
+			addHealth();
+		}
+
+		for(Enemy e : enemies) {
+			e.update(player.position);
+		}
+		collisionCheck();
+		for(Actor item : items) {
+			item.update(player.position);
+		}
+		for(Actor ammunition : ammunitions){
+			ammunition.update(player.position);
+		}
+		if (player.isDead()){
+			//restart();
+			gameOver();
 		}
 	}
 
@@ -150,7 +140,7 @@ public class Level extends HUD {
 				healthUsed = true;
 				//Level.draw(canvas);
 				//redraw the health bar to reflect the changes then DONE!!!!
-				//healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()), 585, 15,0);
+				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()), 585, 15,0);
 				//healthBar.clear();
 				//healthBar.draw(canvas);
 				items.remove(s);
@@ -178,12 +168,12 @@ public class Level extends HUD {
 				//Log.d(TAG,"collision detected!");
 				//bites++;
 				//decrement health
-				//healthBar.clear();
+				healthBar.clear();
 				player.isShoved(e);
 			}
 		}
 	}
-	
+
 	public int getHealthBarName(){
 		int temp = 0;
 		if(player.getHealth() == 100){
@@ -208,16 +198,16 @@ public class Level extends HUD {
 		enemies.clear();
 		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
 		player.setCenter(new Vector2(400, 240));
-		//healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
 		if (bites >=5){
 			mode = GAMEOVER;
 		}
 	}
-	
+
 	public void gameOver(){
 		mode = GAMEOVER;
 	}
-	
+
 	//draw the game over screen.
 	public static void drawGameOverScreen(Canvas canvas, float screenHeight, float screenWidth) {
 		textPaint = new Paint();
@@ -230,28 +220,20 @@ public class Level extends HUD {
 		//canvas.drawText("You reached level " + level, screenWidth / 2, (float) (screenHeight * 0.60), textPaint);
 		//canvas.drawText("Press 'Back' for Main Menu", screenWidth / 2, (float) (screenHeight * 0.85), textPaint);
 	}
-	
 
-	public void draw(Canvas canvas) {
-		try
-		{
-			for (Enemy e : enemies)
-				e.draw(canvas);
-			for (Sprite s : items)
-				s.draw(canvas);
-			player.draw(canvas);
-			//healthBar.draw(canvas);
-			ammo.draw(canvas);
-			if (mode == GAMEOVER){
-				Level.drawGameOverScreen(canvas, 500f, 900f);
-				//mode = WAITING_FOR_SURFACE;
-				bites = 0;
-			}
-			healthBar.draw(canvas);
-		}
-		catch(NullPointerException e)
-		{
-			Log.d(TAG, e.toString());
+
+	public void draw(Canvas canvas) {		
+		for (Enemy e : enemies)
+			e.draw(canvas);
+		for (Sprite s : items)
+			s.draw(canvas);
+		player.draw(canvas);
+		healthBar.draw(canvas);
+		ammo.draw(canvas);
+		if (mode == GAMEOVER){
+			Level.drawGameOverScreen(canvas, 500f, 900f);
+			//mode = WAITING_FOR_SURFACE;
+			bites = 0;
 		}
 	}
 }
