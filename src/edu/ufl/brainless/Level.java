@@ -14,11 +14,13 @@ import android.view.Display;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 
-public class Level extends HUD {
+public class Level {
 	private Player player; // Player	
 	private ArrayList<Enemy> enemies;
 	private static final String TAG = Level.class.getSimpleName();
 	private Vector2 direction = new Vector2(1,0);
+	private GameThread thread;
+	private HUD hud;
 	//private Enemy enemy=new Enemy(ResourceManager.getBitmap(R.drawable.enemy),100f,200f,0f,direction,2f,100,25,false);
 	public static int bites = 0; //non-static in jonthan's code
 	private int zombieTimer = 0;
@@ -41,14 +43,17 @@ public class Level extends HUD {
 		return player;
 	}
 
-	public Level() {
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 3f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
+	public Level(GameThread thread, HUD hud) {
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
 		player.setCenter(new Vector2(400, 240));
 		enemies= new ArrayList<Enemy>();
 		addZombie();
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
 		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
+		
+		this.thread = thread;
+		this.hud = hud;
 	}
 
 	public void addHealth(){
@@ -101,15 +106,15 @@ public class Level extends HUD {
 			addHealth();
 		}
 
-		for(Enemy e : enemies) {
-			e.update(player.position);
+		for(int i = enemies.size()-1; i>= 0;i--) {
+			enemies.get(i).update(player.position);
 		}
 		collisionCheck();
-		for(Actor item : items) {
-			item.update(player.position);
+		for(int i = items.size()-1; i>= 0;i--) {
+			items.get(i).update(player.position);
 		}
-		for(Actor ammunition : ammunitions){
-			ammunition.update(player.position);
+		for(int i = ammunitions.size()-1; i>= 0;i--){
+			ammunitions.get(i).update(player.position);
 		}
 		if (player.isDead()){
 			//restart();
@@ -134,16 +139,19 @@ public class Level extends HUD {
 			}
 		}
 		boolean healthUsed = false;
-		for (Actor s : items){
-			if (Rectangle.Intersects(player.rect, s.rect) && player.getHealth() != 100 && healthUsed != true){
-				s.clear();
+		for (int i = items.size() - 1; i >= 0; i--){
+			if (Rectangle.Intersects(player.rect, items.get(i).rect) && player.getHealth() != 100 && healthUsed != true){
+				items.get(i).clear();
 				healthUsed = true;
 				//Level.draw(canvas);
 				//redraw the health bar to reflect the changes then DONE!!!!
-				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()), 585, 15,0);
+				//hud.healthBar.LoadBitmap(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()));
+				
 				//healthBar.clear();
 				//healthBar.draw(canvas);
-				items.remove(s);
+				items.remove(items.get(i));
+				player.addHealth(50);
+				hud.healthBar.LoadBitmap(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()));
 				//mode = HEALTHPACK;
 				//restart();
 			}
@@ -152,24 +160,25 @@ public class Level extends HUD {
 			}
 		}
 		boolean ammoUsed = false;
-		for (Actor a : ammunitions){
-			if(Rectangle.Intersects(player.rect, a.rect) && healthUsed != true){
-				a.clear();
+		for (int i = ammunitions.size() - 1; i >= 0; i--){
+			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && healthUsed != true){
+				ammunitions.get(i).clear();
 				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+1);
 				ammoUsed = true;
-				ammunitions.remove(a);
+				ammunitions.remove(ammunitions.get(i));
 				//restart();
 			}
 		}
 
-		for(Enemy e : enemies) {
-			if (Rectangle.Intersects(player.rect, e.rect) && !e.isDead()){
-				player.inflictDamage(e.damage);
+		for(int i = enemies.size() - 1; i >= 0; i--) {
+			if (Rectangle.Intersects(player.rect, enemies.get(i).rect) && !enemies.get(i).isDead()){
+				player.inflictDamage(enemies.get(i).damage);
 				//Log.d(TAG,"collision detected!");
 				//bites++;
 				//decrement health
-				healthBar.clear();
-				player.isShoved(e);
+				//hud.healthBar.clear();
+				hud.healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()), 585, 15,0);
+				player.isShoved(enemies.get(i));
 			}
 		}
 	}
@@ -196,9 +205,9 @@ public class Level extends HUD {
 	public void restart(){
 		//Log.d(TAG,"restart" + bites);
 		enemies.clear();
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
 		player.setCenter(new Vector2(400, 240));
-		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+		hud.healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
 		if (bites >=5){
 			mode = GAMEOVER;
 		}
@@ -223,12 +232,12 @@ public class Level extends HUD {
 
 
 	public void draw(Canvas canvas) {		
-		for (Enemy e : enemies)
-			e.draw(canvas);
-		for (Sprite s : items)
-			s.draw(canvas);
+		for (int i = enemies.size() - 1; i >= 0; i--)
+			enemies.get(i).draw(canvas);
+		for (int i = items.size() - 1; i >= 0; i--)
+			items.get(i).draw(canvas);
 		player.draw(canvas);
-		healthBar.draw(canvas);
+		hud.healthBar.draw(canvas);
 		ammo.draw(canvas);
 		if (mode == GAMEOVER){
 			Level.drawGameOverScreen(canvas, 500f, 900f);

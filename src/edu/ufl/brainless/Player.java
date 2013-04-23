@@ -89,7 +89,16 @@ public class Player extends Actor {
 			this.death(); //if you get hit, and you would die, and aren't invulnerable, die
 		}
 	}
-
+	
+	public void addHealth(int amount){
+		if(health + amount <= 100){
+			this.health = health + amount;		
+		}
+		else{
+			this.health = 100;
+		}		
+	}
+	
 	public void collision(Enemy x){
 		this.setIsDead(true);
 
@@ -139,7 +148,7 @@ public class Player extends Actor {
 
 		// Check if player fired weapon
 		if (hud.isButtonPressed()) {
-			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction, speed);
+			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction, speed + 10f);
 		}
 		if (hud.isReloadButtonPressed() && reloadFlag){ //reload button works, but there is no reload delay or sound effect
 			heldWeapon.reload();

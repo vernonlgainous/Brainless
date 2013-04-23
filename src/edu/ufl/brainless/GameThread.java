@@ -36,8 +36,9 @@ public class GameThread extends Thread {
 		*/
 		
 		
-		level = new Level();
+		
 		hud = new HUD();
+		level = new Level(this, hud);
 	}
 
 	@Override
