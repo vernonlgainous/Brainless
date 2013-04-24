@@ -79,7 +79,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public void onDraw(Canvas canvas) {
 		//player = new Player(ResourceManager.getBitmap(R.drawable.player), 400f, 100f, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 1000, 25));
-		canvas.drawBitmap(ResourceManager.getBitmap(R.drawable.background2), 0, 0, null);
+		
 		//canvas.drawPicture(picture)
 		//canvas.drawColor(Color.BLACK);
 	}

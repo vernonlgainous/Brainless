@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.Display;
 import android.content.res.Resources;
@@ -130,10 +131,10 @@ public class Level {
 
 
 		// check bullet collisions
-		for(int i = tempBullets.size() - 1; i >= 0; i--) {
-			for(Enemy e : enemies) {
-				if (Rectangle.Intersects(tempBullets.get(i).rect, e.rect) &&  !e.isDead()) {
-					e.inflictDamage(player.getWeapon().weaponDamage);
+		for(int j = enemies.size() - 1; j >= 0; j--) {
+			for(int i = tempBullets.size() - 1; i >= 0; i--) {
+				if (Rectangle.Intersects(tempBullets.get(i).rect, enemies.get(j).rect) &&  !enemies.get(j).isDead()) {
+					enemies.get(j).inflictDamage(player.getWeapon().weaponDamage);
 					player.removeBullet(i);
 				}
 			}
@@ -229,9 +230,16 @@ public class Level {
 		//canvas.drawText("You reached level " + level, screenWidth / 2, (float) (screenHeight * 0.60), textPaint);
 		//canvas.drawText("Press 'Back' for Main Menu", screenWidth / 2, (float) (screenHeight * 0.85), textPaint);
 	}
+	
+	private Rect bgOffset()
+	{
+		Rect result = new Rect((int) player.position.X, (int) player.position.Y, (int) player.position.X + 800, (int) player.position.Y + 480);
+		return result;
+	}
 
-
-	public void draw(Canvas canvas) {		
+	public void draw(Canvas canvas) {	
+		Rect dst = new Rect(0,0,800,480);
+		canvas.drawBitmap(ResourceManager.getBitmap(R.drawable.tilebackground), bgOffset(), dst, null);
 		for (int i = enemies.size() - 1; i >= 0; i--)
 			enemies.get(i).draw(canvas);
 		for (int i = items.size() - 1; i >= 0; i--)
