@@ -80,16 +80,17 @@ public final class R {
     }
     public static final class raw {
         public static final int bow_fired=0x7f040000;
-        public static final int clip_insert=0x7f040001;
-        public static final int pistol=0x7f040002;
-        public static final int player_injured=0x7f040003;
-        public static final int rifle=0x7f040004;
-        public static final int rifle_reload=0x7f040005;
-        public static final int shotgun=0x7f040006;
-        public static final int shotgun_reload=0x7f040007;
-        public static final int submachine=0x7f040008;
-        public static final int submachine_2=0x7f040009;
-        public static final int test_theme=0x7f04000a;
+        public static final int brainless_theme=0x7f040001;
+        public static final int clip_insert=0x7f040002;
+        public static final int pistol=0x7f040003;
+        public static final int player_injured=0x7f040004;
+        public static final int rifle=0x7f040005;
+        public static final int rifle_reload=0x7f040006;
+        public static final int shotgun=0x7f040007;
+        public static final int shotgun_reload=0x7f040008;
+        public static final int submachine=0x7f040009;
+        public static final int submachine_2=0x7f04000a;
+        public static final int test_theme=0x7f04000b;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

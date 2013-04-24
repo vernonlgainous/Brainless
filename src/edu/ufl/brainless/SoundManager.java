@@ -84,7 +84,7 @@ public class SoundManager {
 	 * Adds longer audio files to mediaPlayer map for future use
 	 */
 	public static void loadMedia() {
-		addMedia("theme", "test_theme");
+		addMedia("theme", "brainless_theme");
 	}
 	
 	/**
