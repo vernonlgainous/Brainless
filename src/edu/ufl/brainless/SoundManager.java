@@ -102,9 +102,10 @@ public class SoundManager {
 	 * 
 	 * @param index - the key of the desired audio file in the mediaPlayerMap
 	 */
-	public static void playMedia(String index) {
+	public static void playMedia(String index, boolean isLooping) {
 		try {
 			mediaPlayer.setDataSource(context, mediaPlayerMap.get(index));
+			mediaPlayer.setLooping(isLooping);
 			mediaPlayer.prepare();
 			mediaPlayer.start();
 		}

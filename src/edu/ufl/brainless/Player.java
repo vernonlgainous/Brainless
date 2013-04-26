@@ -17,12 +17,16 @@ public class Player extends Actor {
 	boolean reloadFlag = true;
 	private static final String TAG = Player.class.getSimpleName();
 	public int invinc_timer = 0;
+	public float reloadTimer;
+	public int reloadDuration;
+	public boolean reloading = false;
 
 	public Player(float x, float y, float angle) { // default constructor
 		super(x, y, angle);
 		heldWeapon = new Weapon();
 		health = 100; // every player starts out with full health
 		isDead = false;
+		reloadDuration = 120;
 		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
 		Log.d(TAG, "Player created.");
@@ -33,6 +37,7 @@ public class Player extends Actor {
 		heldWeapon = new Weapon();
 		health = 100; // every player starts out with full health
 		isDead = false;
+		reloadDuration = 120;
 		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
 		Log.d(TAG, "Player created.");
@@ -43,6 +48,7 @@ public class Player extends Actor {
 		heldWeapon = weapon;
 		this.isDead = isDead;
 		this.health = health;
+		reloadDuration = 120;
 		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
 		Log.d(TAG, "Player created.");
@@ -150,15 +156,27 @@ public class Player extends Actor {
 		if (hud.isButtonPressed()) {
 			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction, speed + 10f);
 		}
-		if (hud.isReloadButtonPressed() && reloadFlag){ //reload button works, but there is no reload delay or sound effect
-			heldWeapon.reload();
+		if (hud.isReloadButtonPressed() && reloadFlag){ 
+			this.reloading = true;
 			this.reloadFlag = false;
+			if(this.heldWeapon.numberOfClips > 0){
+				SoundManager.playSound("pistol_reload", 0.5f, false);
+			}
 		}
+		
+		if (reloading) {			
+			if (++reloadTimer >= reloadDuration){				
+				reload();
+			}		
+		}
+		
+		
 		
 		if(!hud.isReloadButtonPressed()){
 			this.reloadFlag = true;
 		}
-		heldWeapon.update(position);
+		
+	heldWeapon.update(position);
 		if(invinc_timer > 0){
 			invinc_timer --;
 		}
@@ -181,6 +199,15 @@ public class Player extends Actor {
 		position.Y += e.direction.Y * e.knockback;
 		this.rect.X=position.X;
 		this.rect.Y=position.Y;
+	}
+	
+	public void reload(){
+	    if(heldWeapon.numberOfClips > 0){	    	
+			reloading = false;
+			reloadTimer = 0;
+			heldWeapon.numberOfClips--;
+			heldWeapon.ammoInClip = heldWeapon.constAmmoInClip;
+		}
 	}
 	
 	@Override

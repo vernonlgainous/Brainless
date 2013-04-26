@@ -98,7 +98,9 @@ public class Weapon extends Item {
 				return false;
 			}		
 			else if(this.ammoRemaining != 0 && this.ammoInClip == 0){ // reload weapon
-				SoundManager.playSound("pistol_reload", 0.5f, false);
+				if(this.numberOfClips > 0){
+					SoundManager.playSound("pistol_reload", 0.5f, false);
+				}
 				reloading = true;
 				return false;
 			}
@@ -146,7 +148,7 @@ public class Weapon extends Item {
 	}
 
 	public void reload(){
-	    if(numberOfClips > 0){
+	    if(numberOfClips > 0){	    	
 			reloading = false;
 			reloadTimer = 0;
 			numberOfClips--;

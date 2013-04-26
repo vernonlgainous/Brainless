@@ -46,19 +46,19 @@ public class GameActivity extends Activity {
     
     @Override
     protected void onDestroy() {
-    	Log.d(TAG, "Destroying...");
+    	Log.d(TAG, "Destroying...");    	
     	SoundManager.pauseMedia();
     	SoundManager.resetMedia();
-    	SoundManager.cleanup();
+    	SoundManager.cleanup();    	
     	super.onDestroy();
     }
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "Stopping...");
-        SoundManager.pauseMedia();
+        Log.d(TAG, "Stopping...");        
+    	SoundManager.pauseMedia();
     	SoundManager.resetMedia();
-    	SoundManager.cleanup();
+    	SoundManager.cleanup();   	
         super.onStop();
     }
 }

@@ -45,7 +45,7 @@ public class GameThread extends Thread {
 	public void run() {
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
-		SoundManager.playMedia("theme");
+		SoundManager.playMedia("theme",true);
 		while (running) {			
 			Canvas c = null;
 			try {
