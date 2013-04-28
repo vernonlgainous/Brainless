@@ -13,6 +13,6 @@ public class Bullet extends Actor {
 
 	public void update(Vector2 playerPosition) {
 		super.update(playerPosition);
-		Vector2.Add(position, Vector2.Multiply(direction, speed)); 
+		//Vector2.Add(position, Vector2.Multiply(direction, speed)); 
 	}
 }

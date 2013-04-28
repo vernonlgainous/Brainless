@@ -32,7 +32,8 @@ public class Player extends Actor {
 		Log.d(TAG, "Player created.");
 	}
 
-	public Player(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) { // default constructor
+	public Player(Bitmap texture, float x, float y, float angle,
+			Vector2 direction, float speed) { // default constructor
 		super(texture, x, y, angle, direction, speed);
 		heldWeapon = new Weapon();
 		health = 100; // every player starts out with full health
@@ -43,7 +44,8 @@ public class Player extends Actor {
 		Log.d(TAG, "Player created.");
 	}
 
-	public Player(Bitmap texture, float x, float y, float angle, float speed, int health, boolean isDead, Weapon weapon) {
+	public Player(Bitmap texture, float x, float y, float angle, float speed,
+			int health, boolean isDead, Weapon weapon) {
 		super(texture, x, y, angle, new Vector2(0,0), speed);
 		heldWeapon = weapon;
 		this.isDead = isDead;
@@ -55,20 +57,20 @@ public class Player extends Actor {
 	}
 
 	// getters and setters
-	public int getHealth(){
+	public int getHealth() {
 		return health;
 	}
 
-	public void setHealth(int health){
+	public void setHealth(int health) {
 		this.health = health;
 	}
 
-	//death and damage methods
-	public boolean isDead(){
+	// death and damage methods
+	public boolean isDead() {
 		return this.isDead;
 	}
-	
-	public void setIsDead(boolean isDead){
+
+	public void setIsDead(boolean isDead) {
 		this.isDead = isDead;
 	}
 
@@ -80,66 +82,62 @@ public class Player extends Actor {
 		this.heldWeapon = weapon;
 	}
 
-
-
-	public void inflictDamage(int DamageAmount){
-		if(health - DamageAmount > 0 && invinc_timer <= 0) {
+	public void inflictDamage(int DamageAmount) {
+		if (health - DamageAmount > 0 && invinc_timer <= 0) {
 			health -= DamageAmount;
 			SoundManager.playSound("player_injured", 1.2f, false);
-			invinc_timer = 90; //if you get hit, and you aren't invulnerable, make yourself invulnerable for 1.5 seconds
-		}
-		else if (health - DamageAmount <= 0 && invinc_timer <= 0){
+			invinc_timer = 90; // if you get hit, and you aren't invulnerable,
+								// make yourself invulnerable for 1.5 seconds
+		} else if (health - DamageAmount <= 0 && invinc_timer <= 0) {
 			health = 0;
 			SoundManager.playSound("player_injured", 1.0f, false);
 			this.setIsDead(true);
-			this.death(); //if you get hit, and you would die, and aren't invulnerable, die
+			this.death(); // if you get hit, and you would die, and aren't
+							// invulnerable, die
 		}
 	}
-	
-	public void addHealth(int amount){
-		if(health + amount <= 100){
-			this.health = health + amount;		
-		}
-		else{
+
+	public void addHealth(int amount) {
+		if (health + amount <= 100) {
+			this.health = health + amount;
+		} else {
 			this.health = 100;
-		}		
+		}
 	}
-	
-	public void collision(Enemy x){
+
+	public void collision(Enemy x) {
 		this.setIsDead(true);
 
 	}
 
-	public void death(){
+	public void death() {
 		this.isDead = true;
 	}
 
 	/*
-	public void checkDirection(float angle) {
-		if(angle > -45 && angle <= 45)
-			super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_right));
-		else if(angle > 45 && angle <= 135)
-			super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_down));
-		else if(angle > 135 || angle <= -135)
-			super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_left));
-		else if(angle > -135 && angle <= -45)
-			super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_up));
-	}*/
+	 * public void checkDirection(float angle) { if(angle > -45 && angle <= 45)
+	 * super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_right));
+	 * else if(angle > 45 && angle <= 135)
+	 * super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_down)); else
+	 * if(angle > 135 || angle <= -135)
+	 * super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_left)); else
+	 * if(angle > -135 && angle <= -45)
+	 * super.LoadBitmap(ResourceManager.getBitmap(R.drawable.player_up)); }
+	 */
 
 	public void update(HUD hud) {
 		// update player movement
 		direction = hud.getPlayerDirection();
-		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
-		if(hud.isPlayerMoving() == HUD.TILT) {
+		this.angle = (float) (Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
+		if (hud.isPlayerMoving() == HUD.TILT) {
 			position.X += direction.X * 0;
 			position.Y += direction.Y * 0;
-			this.rect.X=position.X;
-			this.rect.Y=position.Y;
-			//checkDirection(angle);
-		}
-		else if(hud.isPlayerMoving() == HUD.MOVE) {
+			this.rect.X = position.X;
+			this.rect.Y = position.Y;
+			// checkDirection(angle);
+		} else if (hud.isPlayerMoving() == HUD.MOVE) {
 			super.update();
-			//checkDirection(angle);
+			// checkDirection(angle);
 		}
 
 		// Check if player is outside of screen
@@ -154,31 +152,30 @@ public class Player extends Actor {
 
 		// Check if player fired weapon
 		if (hud.isButtonPressed()) {
-			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction, speed + 10f);
+			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction,
+					speed + 10f);
 		}
-		if (hud.isReloadButtonPressed() && reloadFlag){ 
+		if (hud.isReloadButtonPressed() && reloadFlag) {
 			this.reloading = true;
 			this.reloadFlag = false;
-			if(this.heldWeapon.numberOfClips > 0){
+			if (this.heldWeapon.numberOfClips > 0) {
 				SoundManager.playSound("pistol_reload", 0.5f, false);
 			}
 		}
-		
-		if (reloading) {			
-			if (++reloadTimer >= reloadDuration){				
+
+		if (reloading) {
+			if (++reloadTimer >= reloadDuration) {
 				reload();
-			}		
+			}
 		}
-		
-		
-		
-		if(!hud.isReloadButtonPressed()){
+
+		if (!hud.isReloadButtonPressed()) {
 			this.reloadFlag = true;
 		}
-		
-	heldWeapon.update(position);
-		if(invinc_timer > 0){
-			invinc_timer --;
+
+		heldWeapon.update(position);
+		if (invinc_timer > 0) {
+			invinc_timer--;
 		}
 	}
 
@@ -189,27 +186,28 @@ public class Player extends Actor {
 	public void removeBullet(int index) {
 		heldWeapon.removeBullet(index);
 	}
-	
-	public void cameraPositionCalculate(){
-		cameraPosition = new Vector2(Camera.playerPosition.X, Camera.playerPosition.Y);
+
+	public void cameraPositionCalculate() {
+		cameraPosition = new Vector2(Camera.playerPosition.X,
+				Camera.playerPosition.Y);
 	}
-	
-	public void isShoved(Enemy e){
+
+	public void isShoved(Enemy e) {
 		position.X += e.direction.X * e.knockback;
 		position.Y += e.direction.Y * e.knockback;
-		this.rect.X=position.X;
-		this.rect.Y=position.Y;
+		this.rect.X = position.X;
+		this.rect.Y = position.Y;
 	}
-	
-	public void reload(){
-	    if(heldWeapon.numberOfClips > 0){	    	
+
+	public void reload() {
+		if (heldWeapon.numberOfClips > 0) {
 			reloading = false;
 			reloadTimer = 0;
 			heldWeapon.numberOfClips--;
 			heldWeapon.ammoInClip = heldWeapon.constAmmoInClip;
 		}
 	}
-	
+
 	@Override
 	public void draw(Canvas canvas) {
 		heldWeapon.draw(canvas);

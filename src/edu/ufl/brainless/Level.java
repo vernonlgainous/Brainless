@@ -37,6 +37,8 @@ public class Level {
 	private ArrayList<Actor> ammunitions;
 	private int healthTimer = 0;
 	private int healthInterval = 600;
+	boolean ammoUsed = false;
+	boolean healthUsed = false;
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
@@ -139,18 +141,18 @@ public class Level {
 				}
 			}
 		}
-		boolean healthUsed = false;
+		
 		for (int i = items.size() - 1; i >= 0; i--){
 			if (Rectangle.Intersects(player.rect, items.get(i).rect) && player.getHealth() != 100 && healthUsed != true){
 				items.get(i).clear();
-				healthUsed = true;
+				this.healthUsed = true;
 				//Level.draw(canvas);
 				//redraw the health bar to reflect the changes then DONE!!!!
 				//hud.healthBar.LoadBitmap(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()));
 				
 				//healthBar.clear();
 				//healthBar.draw(canvas);
-				items.remove(items.get(i));
+				items.remove(i);
 				player.addHealth(50);
 				hud.healthBar.LoadBitmap(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()));
 				//mode = HEALTHPACK;
@@ -160,12 +162,12 @@ public class Level {
 				//do nothing
 			}
 		}
-		boolean ammoUsed = false;
+		
 		for (int i = ammunitions.size() - 1; i >= 0; i--){
-			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && healthUsed != true){
+			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && ammoUsed != true){
 				ammunitions.get(i).clear();
 				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+1);
-				ammoUsed = true;
+				this.ammoUsed = true;
 				ammunitions.remove(ammunitions.get(i));
 				//restart();
 			}
