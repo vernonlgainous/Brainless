@@ -35,11 +35,15 @@ public class Level {
 	private int mode = WAITING_FOR_SURFACE;
 	private ArrayList<Actor> items;
 	private ArrayList<Actor> ammunitions;
+	private ArrayList<Actor> guns;
 	private int healthTimer = 0;
 	private int healthInterval = 600;
 	boolean ammoUsed = false;
 	boolean healthUsed = false;
+	boolean gunUsed = false;	
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
+	Actor gun1 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 375f, 0, new Vector2(0,0), 0); //machine gun
+	Actor gun2 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 175f, 0, new Vector2(0,0), 0); //shotgun
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
 	public Player getPlayer() {
@@ -47,13 +51,15 @@ public class Level {
 	}
 
 	public Level(GameThread thread, HUD hud) {
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
 		player.setCenter(new Vector2(400, 240));
 		enemies= new ArrayList<Enemy>();
 		addZombie();
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
 		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
+		guns = new ArrayList<Actor>();
+		guns.add(gun1);
 		
 		this.thread = thread;
 		this.hud = hud;
@@ -119,6 +125,9 @@ public class Level {
 		for(int i = ammunitions.size()-1; i>= 0;i--){
 			ammunitions.get(i).update(player.position);
 		}
+		for(int i = guns.size() -1; i >= 0; i--){
+			guns.get(i).update(player.position);
+		}
 		if (player.isDead()){
 			//restart();
 			gameOver();
@@ -172,6 +181,16 @@ public class Level {
 				//restart();
 			}
 		}
+		
+		for (int i = guns.size() - 1; i >= 0; i--){
+			if(Rectangle.Intersects(player.rect, guns.get(i).rect) && gunUsed != true){
+				guns.get(i).clear();
+				player.setWeapon(new MachineGun());
+				this.gunUsed = true;
+				guns.remove(guns.get(i));
+				//restart();
+			}
+		}
 
 		for(int i = enemies.size() - 1; i >= 0; i--) {
 			if (Rectangle.Intersects(player.rect, enemies.get(i).rect) && !enemies.get(i).isDead()){
@@ -208,7 +227,7 @@ public class Level {
 	public void restart(){
 		//Log.d(TAG,"restart" + bites);
 		enemies.clear();
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
 		player.setCenter(new Vector2(400, 240));
 		hud.healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
 		if (bites >=5){
@@ -249,6 +268,7 @@ public class Level {
 		player.draw(canvas);
 		hud.healthBar.draw(canvas);
 		ammo.draw(canvas);
+		gun1.draw(canvas);
 		if (mode == GAMEOVER){
 			Level.drawGameOverScreen(canvas, 500f, 900f);
 			//mode = WAITING_FOR_SURFACE;
